@@ -1,0 +1,442 @@
+<div class="row flight-search single-search">
+	<div class="container clear-padding">
+		<div class="col-md-12 clear-padding search-section">
+			<h2 class="text-center">FIND YOUR PERFECT AIRLINE</h2>
+			&nbsp;
+			<!-- START: HOTEL SEARCH -->
+			<div role="tabpanel" class="tab-pane" id="hotel">
+				<form novalidate #form="ngForm" (ngSubmit)="searchFlight(form)">
+					<div class="col-md-4 search-col-padding" style="padding-left: 0px;">
+						<input type="radio" class="radio" value="Domestic" name="domesticInterClass"
+							(click)="toggleDomestic()" [(ngModel)]="domesticInter" style="display: inline; width: 3%;">
+						Domestic
+						<input type="radio" class="radio" value="International" name="domesticInterClass"
+							(click)="toggleDomestic()" [(ngModel)]="domesticInter" style="display: inline; width: 3%;">
+						International
+					</div>
+
+					<div class="col-md-4 search-col-padding" style="padding-left: 0px;">
+						<input type="radio" class="radio" value="Economy" name="flightClass" [(ngModel)]="flightClass"
+							style="display: inline; width: 3%;">
+						Economy
+						<input type="radio" class="radio" value="Business" name="flightClass" [(ngModel)]="flightClass"
+							style="display: inline; width: 3%;">
+						Business
+					</div>
+
+					<div class="col-md-4 search-col-padding" style="padding-left: 0px;">
+						<input type="radio" class="radio" value="Single" name="singleorreturn" checked
+							(click)="toggleReturn()" style="display: inline; width: 3%;">
+						Single
+						<input type="radio" class="radio" value="Return" name="singleorreturn" (click)="toggleReturn()"
+							style="display: inline; width: 3%;">
+						Return
+					</div>
+
+					<div class="col-md-4 col-sm-3 search-col-padding" style="padding-left: 0px;">
+						<label>Leaving From</label>
+						<div class="input-group">
+							<!-- <input type="text" name="dep-city" class="form-control" required placeholder="E.g. New York" [(ngModel)]="flightSearch.legs[0].from"> -->
+							<select name="departurecode" class="form-control" [(ngModel)]="selectedDeparture" required>
+								<!-- <option value="+1">Delhi</option>								
+								<option value="+91">Chennai</option> -->
+								<option disabled>Departure</option>
+
+								<!-- <option *ngFor="let city of cityList">{{city}}</option> -->
+								<option [value]="city.iata" *ngFor="let city of citydata">
+									{{city.city}}, {{city.name}}
+								</option>
+							</select>
+							<span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i></span>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-3 search-col-padding">
+						<label>Leaving To</label>
+						<div class="input-group">
+							<!-- <input type="text" name="des-city" class="form-control" required placeholder="E.g. London" [(ngModel)]="flightSearch.legs.to"> -->
+							<select name="arrivalcode" class="form-control" [(ngModel)]="selectedArrival" required>
+								<option disabled>Arrival</option>
+								<option [value]="city.iata" *ngFor="let city of citydata">
+									{{city.city}}, {{city.name}}
+								</option>
+							</select>
+							<span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i></span>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 search-col-padding">
+						<label>Departure</label>
+						<div class="input-group">
+							<input type="text" name="dep_date" id="departure_date" class="form-control"
+								[(ngModel)]="departureDate" #depdate required>
+							<!-- <input type="text" name="dep_date" id="departure_date" class="form-control" placeholder="MM/DD/YYYY"> -->
+							<span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
+						</div>
+					</div>
+					<div class="col-md-2 col-sm-2 search-col-padding">
+						<label>Return</label>
+						<div class="input-group">
+							<input type="text" name="return_date" id="return_date" class="form-control"
+								[(ngModel)]="returnDate" #returndate [disabled]="isReturn">
+							<!-- <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span> -->
+						</div>
+					</div>
+					<!-- <div class="col-md-2 col-sm-2 search-col-padding">						
+						<label>Guest(s)</label><br>
+						<div>
+							<select name="guests" class="form-control" [(ngModel)]="guestAdult" required
+								style="width: 33%;">
+								<option disabled>Guest</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+							<select name="guests" class="form-control" [(ngModel)]="guestChild" required
+								style="width: 33%;">
+								<option disabled>Guest</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+							<select name="guests" class="form-control" [(ngModel)]="guestInfant" required
+								style="width: 33%;">
+								<option disabled>Guest</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+						</div>
+					</div> -->
+					<div class="clearfix"></div>
+
+					<div class="col-md-12 col-sm-6 search-col-padding" style="padding-left: 0px;">
+						<div class="col-md-3 col-sm-2" style="padding-left: 0px;">
+							<label>Adult</label>&nbsp;
+							<select name="guests" class="form-control" [(ngModel)]="guestAdult" required
+								style="display: inline; width: 50%;">
+								<option disabled>Adult</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+						</div>
+						<div class="col-md-3 col-sm-2">
+							<label>Child</label>&nbsp;
+							<select name="guestsChild" class="form-control" [(ngModel)]="guestChild"
+								style="display: inline; width: 50%;">
+								<option disabled>Child</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+						</div>
+						<div class="col-md-3 col-sm-2">
+							<label>Infant</label>&nbsp;
+							<select name="guestsInfant" class="form-control" [(ngModel)]="guestInfant"
+								style="display: inline; width: 50%;">
+								<option disabled>Infant</option>
+								<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+							</select>
+						</div>
+
+						<div class="col-md-3 col-sm-2 book">
+							<!-- <h6 data-toggle="modal" data-target=".flight-details">Show Details <i class="fa fa-plus"></i>
+							</h6> -->
+							<div>
+								<a data-toggle="modal" data-target=".flight-details">Multi Segment</a>
+								<!-- <input type="checkbox" data-toggle="modal" data-target=".flight-details"> &nbsp;&nbsp;
+								<label> Multi Segment</label> -->
+							</div>
+							<!-- <label>Multi Segment</label>
+							<input type="checkbox" name="multi" class="form-control" data-toggle="modal" data-target=".flight-details"> -->
+						</div>
+					</div>
+
+
+
+					<div class="clearfix"></div>
+					<div class="col-md-12 text-center search-col-padding">
+						<!-- <button type="submit" class="search-button btn transition-effect">Search Flight</button> -->
+						<!-- <button type="submit" class="search-button btn transition-effect"
+							(click)="searchFlight()">Search Flight</button> -->
+						<button type="submit" class="search-button btn transition-effect">Search Flight</button>
+					</div>
+					<div class="clearfix"></div>
+				</form>
+				<!-- <input type="button" title="Testing" (click)="searchFlight()"> -->
+			</div>
+			<!-- END: HOTEL SEARCH -->
+		</div>
+	</div>
+</div>
+
+<!-- START: FLIGHT MODAL -->
+<!-- <div class="modal fade flight-details" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="flight-details-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true"><i class="fa fa-times"></i></span></button>
+					<h5>FLIGHT DETAILS</h5>
+					<div class="flight-details-book">
+						<div class="col-md-2 col-sm-2 col-xs-4">
+							<h3>$599</h3>
+							<h6>Per Person</h6>
+						</div>
+						<div class="col-md-2 col-sm-2 col-xs-4">
+							<a href="#">BOOK</a>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="flight-details-body">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#itinerary">Itinerary</a></li>
+						<li><a data-toggle="tab" href="#fare">Fare Details</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="itinerary" class="tab-pane fade in active">
+							<h5 class="itinerary-date">Mon, Aug 3</h5>
+							<div class="itinerary-details text-center">
+								<div class="flight">
+									<div class="col-md-1 col-sm-2 col-xs-3">
+										<img src="assets/images/airline/airline.jpg" alt="cruise">
+										<h6>Vistara</h6>
+									</div>
+									<div class="col-md-3 col-sm-3 col-xs-3">
+										<h4>19:20</h4>
+										<h5>London (LHR)</h5>
+									</div>
+									<div class="col-md-1 col-sm-1 col-xs-1">
+										<i class="fa fa-long-arrow-right"></i>
+									</div>
+									<div class="col-md-3 col-sm-3 col-xs-3">
+										<h4>21:20</h4>
+										<h5>New Delhi (DEL)</h5>
+									</div>
+									<div class="col-md-2 col-sm-3 col-xs-2">
+										<h4>02h 00m</h4>
+										<h5>0 Stop</h5>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div>
+									<div class="col-md-6 col-sm-6 airline-facilities text-center">
+										<div class="col-md-3 col-sm-3 col-xs-3">
+											<i class="fa fa-cutlery"></i>
+											<span>Free Meal</span>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3">
+											<i class="fa fa-coffee"></i>
+											<span>Drinks</span>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3">
+											<i class="fa fa-taxi"></i>
+											<span>Taxi</span>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-3">
+											<i class="fa fa-wifi"></i>
+											<span>Free Wifi</span>
+										</div>
+									</div>
+									<div class="clearfix-sm"></div>
+									<div class="col-md-6 col-sm-6 airline-rating text-center">
+										<h5>Airline Rating</h5>
+										<i class="fa fa-star colored"></i>
+										<i class="fa fa-star colored"></i>
+										<i class="fa fa-star colored"></i>
+										<i class="fa fa-star colored"></i>
+										<i class="fa fa-star"></i>
+										<h6>4.0/5 Based on 128 Guest Reviews</h6>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="fare" class="tab-pane fade">
+							<div class="col-md-6 col-sm-6">
+								<h5>Fare Details</h5>
+								<table>
+									<tr>
+										<td>Base Fare</td>
+										<td>$499</td>
+									</tr>
+									<tr>
+										<td>Development Fee</td>
+										<td>$19</td>
+									</tr>
+									<tr>
+										<td>Trasnportation</td>
+										<td>$420</td>
+									</tr>
+									<tr>
+										<td>Service Fee</td>
+										<td>$25</td>
+									</tr>
+									<tr>
+										<td>Serivce Tax</td>
+										<td>$20</td>
+									</tr>
+									<tr class="grand-total">
+										<td>Grand Total</td>
+										<td>$599</td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-md-6 col-sm-6">
+								<h5>Fare Rule</h5>
+								<table>
+									<tr>
+										<td>Date Change Penality</td>
+										<td>$19</td>
+									</tr>
+									<tr>
+										<td>Cancellation Penality</td>
+										<td>$25</td>
+									</tr>
+									<tr>
+										<td>Service Fee</td>
+										<td>$20</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> -->
+<!-- END: FLIGHT MODAL -->
+
+
+
+
+<div class="modal fade flight-details" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1> Multi Segment Flight Search</h1>
+
+				<div class="col-md-4 col-sm-6  search-col-padding" style="padding-left: 0px;">
+					<label>Leaving From</label>
+					<!-- <div class="input-group"> -->
+					<select name="departurecode" class="form-control" [(ngModel)]="selectedDeparture">
+						<option disabled>Departure</option>
+						<option [value]="city.iata" *ngFor="let city of citydata">{{city.city}}, {{city.name}}</option>
+					</select>
+					<!-- <span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i></span> -->
+					<!-- </div> -->
+				</div>
+				<div class="col-md-4 col-sm-6  search-col-padding">
+					<label>Leaving To</label>
+					<select name="arrivalcode" class="form-control" [(ngModel)]="selectedArrival">
+						<option disabled>Arrival</option>
+						<option [value]="city.iata" *ngFor="let city of citydata">{{city.city}}, {{city.name}}</option>
+					</select>
+					<!-- <span class="input-group-addon"><i class="fa fa-map-marker fa-fw"></i></span> -->
+					<!-- </div> -->
+				</div>
+				<div class="col-md-4 col-sm-6 search-col-padding">
+					<label>Departure</label>
+					<!-- <div class="input-group"> -->
+					<input type="date" name="dep_date" id="departure_date" class="form-control"
+						[(ngModel)]="departureDate" #depdate1>
+					<!-- <input type="text" name="dep_date" id="departure_date" class="form-control" placeholder="MM/DD/YYYY"> -->
+					<!-- <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span> -->
+					<!-- </div> -->
+				</div>
+
+				<!-- <div class="col-md-4 col-sm-6 search-col-padding">
+					<label>Guest(s)</label><br>
+					<select name="guests" class="form-control" [(ngModel)]="guests" required>
+						<option disabled>Guest</option>
+						<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+					</select>
+				</div> -->
+				<div class="col-md-12 col-sm-6 search-col-padding"
+					style="padding-left: 0px; padding-top: 10px; padding-bottom: 10px;;">
+					<div class="col-md-4 col-sm-2" style="padding-left: 0px;">
+						<label>Adult</label>&nbsp;
+						<select name="guests" class="form-control" [(ngModel)]="guestAdult" required
+							style="display: inline; width: 50%;">
+							<option disabled>Adult</option>
+							<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+						</select>
+					</div>
+					<div class="col-md-4 col-sm-2">
+						<label>Child</label>&nbsp;
+						<select name="guestsChild" class="form-control" [(ngModel)]="guestChild"
+							style="display: inline; width: 50%;">
+							<option disabled>Child</option>
+							<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+						</select>
+					</div>
+					<div class="col-md-4 col-sm-2">
+						<label>Infant</label>&nbsp;
+						<select name="guestsInfant" class="form-control" [(ngModel)]="guestInfant"
+							style="display: inline; width: 50%;">
+							<option disabled>Infant</option>
+							<option [value]="guest.code" *ngFor="let guest of guestList">{{guest.name}}</option>
+						</select>
+					</div>
+				</div>
+
+				<form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+					<!-- <label for="name">Product Name:</label>
+						<input type="text" id="name" name="name" formControlName="name" class="form-control"> -->
+
+
+					<table class="table" formArrayName="flights">
+						<tr>
+							<!-- <th colspan="2">Add Multi Segment:</th> -->
+							<th colspan="4">
+								<button type="button" (click)="addQuantity()" class="btn btn-primary"
+									style="width: 100%;">
+									Add Segment
+								</button>
+							</th>
+						</tr>
+						<tr *ngIf="flights().controls.length>0">
+							<td>Leaving From</td>
+							<td>Leaving To</td>
+							<td>Departure Date</td>
+						</tr>
+						<tr *ngFor="let quantity of flights().controls; let i=index" [formGroupName]="i">
+							<td style="padding-right: 30px;">
+								<!-- <label>Leaving from</label> -->
+								<!-- <input type="text" formControlName="city" class="form-control"> -->
+								<select name="departurecode" class="form-control" formControlName="departurecity">
+									<option disabled>Departure</option>
+									<option [value]="city.iata" *ngFor="let city of citydata">{{city.city}},
+										{{city.name}}</option>
+								</select>
+							</td>
+
+							<td style="padding-right: 30px;">
+								<!-- <label>Leaving from</label> -->
+								<!-- <input type="text" formControlName="city" class="form-control"> -->
+								<select name="arrivalcode" class="form-control" formControlName="arrivalcity">
+									<option disabled>Arrival</option>
+									<option [value]="city.iata" *ngFor="let city of citydata">{{city.city}},
+										{{city.name}}</option>
+								</select>
+							</td>
+
+							<td style="padding-right: 10px;">
+								<!-- <input type="text" formControlName="travelDate" class="form-control"> -->
+								<div>
+									<!-- <label>Departure Date</label> -->
+									<!-- <div class="input-group"> -->
+									<input type="date" name="dep_date1" id="departure_date1" class="form-control"
+										formControlName="travelDate">
+									<!-- <input type="text" name="dep_date" id="departure_date" class="form-control" placeholder="MM/DD/YYYY"> -->
+									<!-- <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span> -->
+									<!-- </div> -->
+								</div>
+							</td>
+							<td>
+								<button (click)="removeQuantity(i)" class="btn btn-danger">Remove</button>
+							</td>
+						</tr>
+					</table>
+
+					<button type="submit" class="btn btn-success">Submit</button>
+
+				</form>
+
+				<br />
+				{{this.searchForm.value | json}}
+			</div>
+		</div>
+	</div>
+</div>

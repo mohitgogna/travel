@@ -1,0 +1,10 @@
+{
+    "apiBaseUrl": "http://3.6.22.133:3000/v1",
+    "apiEndpoints": {
+        "flightSearch": "/air/search",
+        "flightBooking": "/air/book",
+        "airports_all":"/collection/airports",
+        "airports_India":"/collection/airports/IN"
+    },
+    "guest": 10
+}
